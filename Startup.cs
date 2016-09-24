@@ -27,7 +27,9 @@ namespace cinnamon.api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
+            services.AddOptions();            
+            services.Configure<AppOptions>(Configuration);
+            services.AddTransient<Models.Context>();
             services.AddMvc();
         }
 
@@ -40,6 +42,8 @@ namespace cinnamon.api
             app.UseMvc();
             app.UseDefaultFiles();
             app.UseStaticFiles();
+
+            Models.Context.Init();
         }
     }
 }
