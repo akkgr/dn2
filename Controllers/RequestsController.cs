@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using cinnamon.api;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
 
 namespace cinnamon.api.Controllers
 {
+    [Authorize]
     public class RequestsController : Controller
     {
         private readonly Context db;

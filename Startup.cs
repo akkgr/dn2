@@ -7,11 +7,16 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace cinnamon.api
 {
-    public class Startup
+    public partial class Startup
     {
+        public IConfigurationRoot Configuration { get; }
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -22,12 +27,12 @@ namespace cinnamon.api
             Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddOptions();            
+            services.AddOptions();
             services.Configure<AppOptions>(Configuration);
             services.AddTransient<Models.Context>();
             services.AddMvc();
@@ -38,6 +43,8 @@ namespace cinnamon.api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            ConfigureAuth(app);
 
             app.UseMvc();
             app.UseDefaultFiles();

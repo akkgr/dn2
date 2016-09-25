@@ -6,9 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
 
 namespace cinnamon.api.Controllers
 {
+    [Authorize]
     [Route("api/people")]
     public class PeopleController : Controller
     {
