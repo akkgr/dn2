@@ -32,6 +32,7 @@ namespace cinnamon.api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddOptions();
             services.Configure<AppOptions>(Configuration);
             services.AddTransient<Models.Context>();
@@ -43,6 +44,8 @@ namespace cinnamon.api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
             ConfigureAuth(app);
 
