@@ -60,7 +60,7 @@ namespace cinnamon.api
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = false,
                 AuthenticationScheme = "Cookie",
-                CookieName = "access_token",
+                CookieName = "token",
                 TicketDataFormat = new CustomJwtDataFormat(
                     SecurityAlgorithms.HmacSha256,
                     tokenValidationParameters)

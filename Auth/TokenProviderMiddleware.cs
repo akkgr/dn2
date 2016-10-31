@@ -100,7 +100,7 @@ namespace cinnamon.api
 
             var response = new
             {
-                access_token = encodedJwt,
+                token = encodedJwt,
                 expires_in = (int)_options.Expiration.TotalSeconds
             };
 
