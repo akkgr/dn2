@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using IdentityServer4.Validation;
+using IdentityServer4.Services;
 
 namespace cinnamon.api
 {
@@ -22,8 +18,9 @@ namespace cinnamon.api
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);            
+
+            builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
@@ -36,6 +33,13 @@ namespace cinnamon.api
             services.AddOptions();
             services.Configure<AppOptions>(Configuration);
             services.AddTransient<Models.Context>();
+            
+            var builder = services.AddDeveloperIdentityServer();
+            builder.AddInMemoryScopes(Config.GetScopes());
+            builder.AddInMemoryClients(Config.GetClients());
+            builder.Services.AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();
+            builder.Services.AddTransient<IProfileService, ProfileService>();
+            
             services.AddMvc();
         }
 
@@ -47,7 +51,15 @@ namespace cinnamon.api
 
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
-            ConfigureAuth(app);
+            app.UseIdentityServer();
+
+            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+            {
+                Authority = "http://localhost:5000",
+                ScopeName = "api1",
+
+                RequireHttpsMetadata = false
+            });
 
             app.UseMvc();
             app.UseDefaultFiles();
