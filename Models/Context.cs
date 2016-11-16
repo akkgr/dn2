@@ -19,6 +19,7 @@ namespace cinnamon.api.Models
             Client = new MongoClient(_options.Value.DataConnection.Connection);
             Database = Client.GetDatabase(_options.Value.DataConnection.Database);
 
+            Users = Database.GetCollection<User>("users");
             People = Database.GetCollection<Person>("people");
             Products = Database.GetCollection<Product>("products");
             ProductCategories = Database.GetCollection<ProductCategory>("productcategories");
@@ -53,6 +54,7 @@ namespace cinnamon.api.Models
             RequestTypes.Indexes.CreateOneAsync(Builders<RequestType>.IndexKeys.Ascending(d => d.Title), options);
         }
 
+        public IMongoCollection<User> Users { get; set; }
         public IMongoCollection<Person> People { get; set; }
         public IMongoCollection<Product> Products { get; set; }
         public IMongoCollection<ProductCategory> ProductCategories { get; set; }
@@ -62,6 +64,14 @@ namespace cinnamon.api.Models
 
         public static void Init()
         {
+            BsonClassMap.RegisterClassMap<User>(cm =>
+            {
+                cm.AutoMap();
+                cm.SetIdMember(cm.GetMemberMap(c => c.Id)
+                    .SetSerializer(new StringSerializer(BsonType.ObjectId))
+                    .SetIdGenerator(StringObjectIdGenerator.Instance));
+            });
+
             BsonClassMap.RegisterClassMap<Person>(cm =>
             {
                 cm.AutoMap();
