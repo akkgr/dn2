@@ -34,7 +34,8 @@ namespace cinnamon.api
             services.Configure<AppOptions>(Configuration);
             services.AddTransient<Models.Context>();
             
-            var builder = services.AddDeveloperIdentityServer();
+            var builder = services.AddIdentityServer();
+            builder.AddTemporarySigningCredential();
             builder.AddInMemoryScopes(Config.GetScopes());
             builder.AddInMemoryClients(Config.GetClients());
             builder.Services.AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();

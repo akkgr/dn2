@@ -18,7 +18,7 @@ namespace cinnamon.api
         {            
             if (context.UserName != context.Password)
             {
-                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "invalid credential");                
+                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Wrong username or password.");                
             }
             else
             {

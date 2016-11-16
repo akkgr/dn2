@@ -21,8 +21,8 @@
     "MongoDB.Driver": "2.3.0",
     "MongoDB.Driver.GridFS": "2.3.0",
     "FluentValidation": "6.4.0-beta8", 
-    "IdentityServer4": "1.0.0-rc2",
-    "IdentityServer4.AccessTokenValidation": "1.0.1-rc2"
+    "IdentityServer4": "1.0.0-rc3",
+    "IdentityServer4.AccessTokenValidation": "1.0.1-rc3"
   },
   "tools": {
     "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final",
