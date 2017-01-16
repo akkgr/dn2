@@ -19,6 +19,7 @@ namespace cinnamon.api.Models
             Client = new MongoClient(_options.Value.DataConnection.Connection);
             Database = Client.GetDatabase(_options.Value.DataConnection.Database);
 
+            Roles = Database.GetCollection<Role>("roles");
             Users = Database.GetCollection<User>("users");
             People = Database.GetCollection<Person>("people");
             Products = Database.GetCollection<Product>("products");
@@ -54,6 +55,7 @@ namespace cinnamon.api.Models
             RequestTypes.Indexes.CreateOneAsync(Builders<RequestType>.IndexKeys.Ascending(d => d.Title), options);
         }
 
+        public IMongoCollection<Role> Roles { get; set; }
         public IMongoCollection<User> Users { get; set; }
         public IMongoCollection<Person> People { get; set; }
         public IMongoCollection<Product> Products { get; set; }
