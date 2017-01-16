@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace cinnamon.api.Controllers
 {
     [Authorize]
+    [Route("api/[controller]")]
     public class CategoriesTreeController : Controller
     {
         private readonly Context db;

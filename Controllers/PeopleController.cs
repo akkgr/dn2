@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace cinnamon.api.Controllers
 {
     [Authorize]
-    [Route("api/people")]
+    [Route("api/[controller]")]
     public class PeopleController : Controller
     {
         private readonly Context db;

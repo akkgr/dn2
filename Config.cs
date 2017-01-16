@@ -6,43 +6,44 @@ namespace cinnamon.api
 {
     public class Config
     {
-        public static IEnumerable<Scope> GetScopes()
+        // scopes define the API resources in your system
+        public static IEnumerable<ApiResource> GetApiResources()
         {
-            return new List<Scope>
+            return new List<ApiResource>
             {
-                new Scope
-                {
-                    Name = "api1",
-                    Description = "My API",                    
-                    Type = ScopeType.Resource,
-                    IncludeAllClaimsForUser = true
-                }
+                new ApiResource("api1", "My API")
             };
         }
 
+        // client want to access resources (aka scopes)
         public static IEnumerable<Client> GetClients()
         {
+            // client credentials client
             return new List<Client>
             {
                 new Client
                 {
                     ClientId = "client",
-                    AlwaysSendClientClaims = true,
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
 
-                    // no interactive user, use the clientid/secret for authentication
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-
-                    // secret for authentication
-                    ClientSecrets = new List<Secret>
+                    ClientSecrets =
                     {
                         new Secret("secret".Sha256())
                     },
+                    AllowedScopes = { "api1" }
+                },
 
-                    // scopes that client has access to
-                    AllowedScopes = new List<string>
+                // resource owner password grant client
+                new Client
+                {
+                    ClientId = "ro.client",
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+
+                    ClientSecrets =
                     {
-                        "api1"
-                    }
+                        new Secret("secret".Sha256())
+                    },
+                    AllowedScopes = { "api1" }
                 }
             };
         }

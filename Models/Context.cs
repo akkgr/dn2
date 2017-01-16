@@ -66,10 +66,7 @@ namespace cinnamon.api.Models
         {
             BsonClassMap.RegisterClassMap<User>(cm =>
             {
-                cm.AutoMap();
-                cm.SetIdMember(cm.GetMemberMap(c => c.Id)
-                    .SetSerializer(new StringSerializer(BsonType.ObjectId))
-                    .SetIdGenerator(StringObjectIdGenerator.Instance));
+                cm.AutoMap();                
             });
 
             BsonClassMap.RegisterClassMap<Person>(cm =>

@@ -6,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using IdentityServer4.Validation;
 using IdentityServer4.Services;
+using Microsoft.AspNetCore.Identity.MongoDB;
+using Microsoft.AspNetCore.Identity;
+using cinnamon.api.Models;
 
 namespace cinnamon.api
 {
@@ -18,13 +21,11 @@ namespace cinnamon.api
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);            
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
-
-
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -33,14 +34,19 @@ namespace cinnamon.api
             services.AddOptions();
             services.Configure<AppOptions>(Configuration);
             services.AddTransient<Models.Context>();
-            
+
             var builder = services.AddIdentityServer();
             builder.AddTemporarySigningCredential();
-            builder.AddInMemoryScopes(Config.GetScopes());
+            builder.AddInMemoryPersistedGrants();
+            builder.AddInMemoryApiResources(Config.GetApiResources());
             builder.AddInMemoryClients(Config.GetClients());
+            builder.AddAspNetIdentity<Models.User>();
             builder.Services.AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();
             builder.Services.AddTransient<IProfileService, ProfileService>();
-            
+
+            services.AddIdentityWithMongoStores(Configuration.GetConnectionString("DefaultConnection"))
+                .AddDefaultTokenProviders();
+
             services.AddMvc();
         }
 
@@ -52,14 +58,15 @@ namespace cinnamon.api
 
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
+            app.UseIdentity();
             app.UseIdentityServer();
 
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
                 Authority = "http://localhost:5000",
-                ScopeName = "api1",
+                RequireHttpsMetadata = false,
 
-                RequireHttpsMetadata = false
+                ApiName = "api1"
             });
 
             app.UseMvc();
