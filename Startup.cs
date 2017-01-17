@@ -81,27 +81,28 @@ namespace cinnamon.api
         {
             Models.Context.Init();
 
-            var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
+            //var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetService<UserManager<IdentityUser>>();
 
-            string[] roles = new string[] { "Administrator", "User" };
-            foreach (string role in roles)
-            {
-                var res = await roleManager.FindByNameAsync(role);
-                if (res == null)
-                {
-                    var irole = new IdentityRole(role);
-                    await roleManager.CreateAsync(irole);
-                }
-            }
+            // string[] roles = new string[] { "Administrator", "User" };
+            // foreach (string role in roles)
+            // {
+            //     var res = await roleManager.FindByNameAsync(role);
+            //     if (res == null)
+            //     {
+            //         var irole = new IdentityRole(role);
+            //         await roleManager.CreateAsync(irole);
+            //     }
+            // }
 
-            var user = await userManager.FindByNameAsync("admin");
+            var user = await userManager.FindByNameAsync("ADMIN");
             if (user == null)
             {
                 user = new IdentityUser()
                 {
                     Email = "admin@local.lc",
-                    UserName = "admin"
+                    UserName = "admin",
+                    NormalizedUserName = "ADMIN"
                 };
                 await userManager.CreateAsync(user, "Abc.123");
                 await userManager.AddToRoleAsync(user,"Administrator");
