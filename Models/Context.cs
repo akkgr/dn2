@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
@@ -9,24 +9,24 @@ namespace cinnamon.api.Models
 {
     public class Context
     {
-        private readonly IOptions<AppOptions> _options;
-        public IMongoClient Client { get; private set; }
-        public IMongoDatabase Database { get; private set; }
-
-        public Context(IOptions<AppOptions> appOptions)
+        public Context(string connectionString)
         {
-            _options = appOptions;
-            Client = new MongoClient(_options.Value.DataConnection.Connection);
-            Database = Client.GetDatabase(_options.Value.DataConnection.Database);
+            var url = new MongoUrl(connectionString);
+			var client = new MongoClient(url);
+			if (url.DatabaseName == null)
+			{
+				throw new ArgumentException("Your connection string must contain a database name", connectionString);
+			}
+			var database = client.GetDatabase(url.DatabaseName);
 
-            Roles = Database.GetCollection<Role>("roles");
-            Users = Database.GetCollection<User>("users");
-            People = Database.GetCollection<Person>("people");
-            Products = Database.GetCollection<Product>("products");
-            ProductCategories = Database.GetCollection<ProductCategory>("productcategories");
-            Repairs = Database.GetCollection<Repair>("repairs");
-            Requests = Database.GetCollection<Request>("requests");
-            RequestTypes = Database.GetCollection<RequestType>("requesttypes");
+            Roles = database.GetCollection<Role>("roles");
+            Users = database.GetCollection<User>("users");
+            People = database.GetCollection<Person>("people");
+            Products = database.GetCollection<Product>("products");
+            ProductCategories = database.GetCollection<ProductCategory>("productcategories");
+            Repairs = database.GetCollection<Repair>("repairs");
+            Requests = database.GetCollection<Request>("requests");
+            RequestTypes = database.GetCollection<RequestType>("requesttypes");
 
             //INDEXES
             var options = new CreateIndexOptions();

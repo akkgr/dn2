@@ -7,6 +7,10 @@ namespace cinnamon.api.Models
 {
     public class User : IdentityUser
     {
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
         [BsonIgnore]
         public string Password { get; set; }
         [BsonIgnore]

@@ -15,9 +15,9 @@ namespace cinnamon.api.Controllers
     public class RequestTypesController : Controller
     {
         private readonly Context db;
-        private readonly IOptions<AppOptions> _options;
+        private readonly IOptions<Resources> _options;
 
-        public RequestTypesController(IOptions<AppOptions> options, Context ctx)
+        public RequestTypesController(IOptions<Resources> options, Context ctx)
         {
             this.db = ctx;
             _options = options;
@@ -73,7 +73,7 @@ namespace cinnamon.api.Controllers
             var result = await db.Requests.Find(filter).CountAsync();
             if (result > 0)
             {
-                return this.BadRequest(_options.Value.Error.TypeHasRequests);
+                return this.BadRequest(_options.Value.TypeHasRequests);
             }
 
             await db.RequestTypes.FindOneAndDeleteAsync(t => t.Id == id);

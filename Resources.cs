@@ -1,19 +1,6 @@
 namespace cinnamon.api
 {
-    public class AppOptions
-    {
-        public Error Error { get; set; }
-        public DataConnection DataConnection { get; set; }
-
-    }
-
-    public class DataConnection
-    {
-        public string Connection { get; set; }
-        public string Database { get; set; }
-    }
-
-    public class Error
+    public class Resources
     {
         public string CustomerHasRepairs { get; set; }
         public string ProductHasRepairs { get; set; }

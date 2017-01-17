@@ -15,9 +15,9 @@ namespace cinnamon.api.Controllers
     public class RepairsController : Controller
     {
         private readonly Context db;
-        private readonly IOptions<AppOptions> _options;
+        private readonly IOptions<Resources> _options;
 
-        public RepairsController(IOptions<AppOptions> options, Context ctx)
+        public RepairsController(IOptions<Resources> options, Context ctx)
         {
             this.db = ctx;
             _options = options;
@@ -97,7 +97,7 @@ namespace cinnamon.api.Controllers
 
             if (repair.History.Count > 1)
             {
-                return this.BadRequest(_options.Value.Error.RepairDelete);
+                return this.BadRequest(_options.Value.RepairDelete);
             }
 
             await db.Repairs.FindOneAndDeleteAsync(t => t.Id == id);

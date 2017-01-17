@@ -15,9 +15,9 @@ namespace cinnamon.api.Controllers
     public class PeopleController : Controller
     {
         private readonly Context db;
-        private readonly IOptions<AppOptions> _options;
+        private readonly IOptions<Resources> _options;
 
-        public PeopleController(IOptions<AppOptions> options, Context ctx)
+        public PeopleController(IOptions<Resources> options, Context ctx)
         {
             this.db = ctx;
             _options = options;
@@ -73,7 +73,7 @@ namespace cinnamon.api.Controllers
             var result = await db.Repairs.Find(filter).CountAsync();
             if (result > 0)
             {
-                return this.BadRequest(_options.Value.Error.CustomerHasRepairs);
+                return this.BadRequest(_options.Value.CustomerHasRepairs);
             }
 
             await db.People.FindOneAndDeleteAsync(t => t.Id == id);

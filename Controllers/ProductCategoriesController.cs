@@ -15,9 +15,9 @@ namespace cinnamon.api.Controllers
     public class ProductCategoriesController : Controller
     {
         private readonly Context db;
-        private readonly IOptions<AppOptions> _options;
+        private readonly IOptions<Resources> _options;
 
-        public ProductCategoriesController(IOptions<AppOptions> options, Context ctx)
+        public ProductCategoriesController(IOptions<Resources> options, Context ctx)
         {
             this.db = ctx;
             _options = options;
@@ -76,7 +76,7 @@ namespace cinnamon.api.Controllers
                 var result = await db.ProductCategories.Find(filter).CountAsync();
                 if (result > 0)
                 {
-                    return this.BadRequest(_options.Value.Error.ProductCategoryHasDocuments);
+                    return this.BadRequest(_options.Value.ProductCategoryHasDocuments);
                 }
             }
 
@@ -86,7 +86,7 @@ namespace cinnamon.api.Controllers
                 var result = await db.Products.Find(filter).CountAsync();
                 if (result > 0)
                 {
-                    return this.BadRequest(_options.Value.Error.ProductCategoryHasDocuments);
+                    return this.BadRequest(_options.Value.ProductCategoryHasDocuments);
                 }
             }
 

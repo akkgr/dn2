@@ -9,6 +9,7 @@ using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity.MongoDB;
 using Microsoft.AspNetCore.Identity;
 using cinnamon.api.Models;
+using System;
 
 namespace cinnamon.api
 {
@@ -32,7 +33,7 @@ namespace cinnamon.api
         {
             services.AddCors();
             services.AddOptions();
-            services.Configure<AppOptions>(Configuration);
+            services.Configure<Resources>(Configuration.GetSection("Resources"));
             services.AddTransient<Models.Context>();
 
             var builder = services.AddIdentityServer();
@@ -73,7 +74,38 @@ namespace cinnamon.api
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
+            Initialize(app.ApplicationServices);
+        }
+
+        public async void Initialize(IServiceProvider serviceProvider)
+        {
             Models.Context.Init();
+
+            var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetService<UserManager<IdentityUser>>();
+
+            string[] roles = new string[] { "Administrator", "User" };
+            foreach (string role in roles)
+            {
+                var res = await roleManager.FindByNameAsync(role);
+                if (res == null)
+                {
+                    var irole = new IdentityRole(role);
+                    await roleManager.CreateAsync(irole);
+                }
+            }
+
+            var user = await userManager.FindByNameAsync("admin");
+            if (user == null)
+            {
+                user = new IdentityUser()
+                {
+                    Email = "admin@local.lc",
+                    UserName = "admin"
+                };
+                await userManager.CreateAsync(user, "Abc.123");
+                await userManager.AddToRoleAsync(user,"Administrator");
+            }
         }
     }
 }

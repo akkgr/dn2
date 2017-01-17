@@ -15,9 +15,9 @@ namespace cinnamon.api.Controllers
     public class ProductsController : Controller
     {
         private readonly Context db;
-        private readonly IOptions<AppOptions> _options;
+        private readonly IOptions<Resources> _options;
 
-        public ProductsController(IOptions<AppOptions> options, Context ctx)
+        public ProductsController(IOptions<Resources> options, Context ctx)
         {
             this.db = ctx;
             _options = options;
@@ -84,7 +84,7 @@ namespace cinnamon.api.Controllers
             var result = await db.Repairs.Find(filter).CountAsync();
             if (result > 0)
             {
-                return this.BadRequest(_options.Value.Error.ProductHasRepairs);
+                return this.BadRequest(_options.Value.ProductHasRepairs);
             }
 
             await db.Products.FindOneAndDeleteAsync(t => t.Id == id);
