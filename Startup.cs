@@ -39,6 +39,7 @@ namespace cinnamon.api
             var builder = services.AddIdentityServer();
             builder.AddTemporarySigningCredential();
             builder.AddInMemoryPersistedGrants();
+            builder.AddInMemoryIdentityResources(Config.GetIdentityResources());
             builder.AddInMemoryApiResources(Config.GetApiResources());
             builder.AddInMemoryClients(Config.GetClients());
             builder.AddAspNetIdentity<Models.User>();

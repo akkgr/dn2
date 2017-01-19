@@ -26,8 +26,12 @@ namespace cinnamon.api
             if (result.Succeeded)
             {
                 var user = await userManager.FindByNameAsync(context.UserName);
-                List<Claim> c = new List<Claim>();
-                context.Result = new GrantValidationResult(subject: "tasos", authenticationMethod: "custom", claims: c);
+                List<Claim> claims = new List<Claim>();
+                foreach (var c in user.Claims)
+                {
+                    claims.Add(new Claim(c.Type, c.Value));
+                }
+                context.Result = new GrantValidationResult(subject: user.UserName, authenticationMethod: "custom", claims: claims);
             }
             else
             {
