@@ -23,7 +23,7 @@
     "FluentValidation": "6.4.0-beta9",
     "Microsoft.AspNetCore.Identity": "1.1.0",
     "Microsoft.AspNetCore.Identity.MongoDB": "1.0.2",
-    "IdentityServer4": "1.0.1",
+    "IdentityServer4": "1.0.2",
     "IdentityServer4.AccessTokenValidation": "1.0.2",
     "IdentityServer4.AspNetIdentity": "1.0.0"
   },

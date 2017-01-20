@@ -8,7 +8,6 @@ using IdentityServer4.Validation;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity.MongoDB;
 using Microsoft.AspNetCore.Identity;
-using cinnamon.api.Models;
 using System;
 
 namespace cinnamon.api

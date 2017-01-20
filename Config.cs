@@ -1,7 +1,5 @@
 
 using System.Collections.Generic;
-using System.Security.Claims;
-using IdentityServer4;
 using IdentityServer4.Models;
 
 namespace cinnamon.api
@@ -22,7 +20,7 @@ namespace cinnamon.api
         {
             return new List<ApiResource>
             {
-                new ApiResource("api1", new [] {"role"})
+                new ApiResource("api1", "My API")
             };
         }
 
@@ -36,19 +34,13 @@ namespace cinnamon.api
                 {
                     ClientId = "ro.client",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-                    AlwaysSendClientClaims = true,
-                    ClientSecrets =
+
+                    ClientSecrets = 
                     {
                         new Secret("secret".Sha256())
                     },
-                    AllowedScopes =
-                    {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
-                    },
-                    Claims = { new Claim("test","test") }
-                }
+                    AllowedScopes = { "api1" }
+                },
             };
         }
     }

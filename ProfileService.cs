@@ -5,32 +5,37 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.MongoDB;
 
 namespace cinnamon.api
 {
     public class ProfileService : IProfileService
     {
+        private readonly UserManager<IdentityUser> userManager;
+
+        public ProfileService(UserManager<IdentityUser> uctx)
+        {
+            userManager = uctx;
+        }
+
         public Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             string subject = context.Subject.Claims.ToList().Find(s => s.Type == "sub").Value;
             try
             {
-                // Get Claims From Database, And Use Subject To Find The Related Claims, As A Subject Is An Unique Identity Of User
-                List<string> claimStringList = new List<string>();
-                if (claimStringList == null)
+                var user = userManager.FindByNameAsync(subject).Result;
+                List<Claim> claims = new List<Claim>();
+                foreach (var r in user.Roles)
                 {
-                    return Task.FromResult(0);
+                    claims.Add(new Claim("role", r));
                 }
-                else
+                foreach (var c in user.Claims)
                 {
-                    List<Claim> claimList = new List<Claim>();
-                    for (int i = 0; i < claimStringList.Count; i++)
-                    {
-                        claimList.Add(new Claim("role", claimStringList[i]));
-                    }
-                    context.IssuedClaims = claimList.Where(x => context.RequestedClaimTypes.Contains(x.Type)).ToList();
-                    return Task.FromResult(0);
+                    claims.Add(new Claim(c.Type, c.Value));
                 }
+                context.IssuedClaims = claims;
+                return Task.FromResult(0);
             }
             catch
             {
